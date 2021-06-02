@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Torch</string>
+    <string name="user_guide"><u>User Guide</u></string>
 </resources>
