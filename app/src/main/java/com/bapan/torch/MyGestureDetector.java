@@ -18,6 +18,7 @@ public class MyGestureDetector {
         this.context = context;
     }
     void setListeners(MyGestureListeners gestureListeners){
+    if(gestureListeners != null){
         view.setOnTouchListener(new View.OnTouchListener() {
             private GestureDetector gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
                 @Override
@@ -45,23 +46,27 @@ public class MyGestureDetector {
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         //Toast.makeText(context, "Down", Toast.LENGTH_SHORT).show();
-                    break;
+                        break;
                     case MotionEvent.ACTION_MOVE:
                         change_X = event.getX()-current_X;
                         change_Y = event.getY()-current_Y;
                         if(Math.abs(change_Y) > Math.abs(change_X)){
                             gestureListeners.onVerticalSwipe(change_Y);
                         }
-                    break;
+                        break;
                     case MotionEvent.ACTION_UP:
                         //Toast.makeText(context, "Up", Toast.LENGTH_SHORT).show();
-                    break;
+                        break;
                 }
                 current_X = event.getX();
                 current_Y = event.getY();
                 return true;
             }
         });
+    }
+    else {
+        view.setOnTouchListener(null);
+    }
     }
     interface MyGestureListeners{
          void onVerticalSwipe(float change);

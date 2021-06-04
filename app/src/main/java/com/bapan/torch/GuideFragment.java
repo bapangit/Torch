@@ -1,7 +1,9 @@
 package com.bapan.torch;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 /**
@@ -61,38 +64,57 @@ public class GuideFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_guide, container, false);
+        sharedPrepData = new SharedPrepData(getContext());
+        mainActivity = (MainActivity)getActivity();
+        mainActivity.setScreenBrightness(0.4f); 
         initializeViews();
         initializeListeners();
         return view;
     }
 
     private void initializeListeners() {
-
         listener = new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
-            SharedPrepData sharedPrepData = new SharedPrepData(getContext());
                 if((v==closeBtn)){
                     getActivity().getSupportFragmentManager().popBackStack();
                         sharedPrepData.setGuideStatus(!checkBox.isChecked());
                     if(checkBox.isChecked()){
                         sharedPrepData.setGuideInt(0);
                     }
+                    mainActivity.switchOnTorch(sharedPrepData.getTorchType());
                 }
             }
         };
         mainFrame.setOnClickListener(null);
         closeBtn.setOnClickListener(listener);
+        radioGroup.check(sharedPrepData.getTorchType()?R.id.radio_id_2:R.id.radio_id_1);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if ((checkedId == R.id.radio_id_1)) {
+                    sharedPrepData.setTorchType(false);
+                    mainActivity.switchOnTorch(false);
+                } else {
+                    sharedPrepData.setTorchType(true);
+                    mainActivity.setBackTorchMode(true);
+                }
+            }
+        });
     }
 
     private void initializeViews() {
         closeBtn = view.findViewById(R.id.close_btn_id);
         mainFrame = view.findViewById(R.id.main_frame_id);
         checkBox = view.findViewById(R.id.checkBox);
+        radioGroup = view.findViewById(R.id.radio_group_id);
     }
 
     private View view;
@@ -100,4 +122,7 @@ public class GuideFragment extends Fragment {
     private FrameLayout mainFrame;
     private Button closeBtn;
     private CheckBox checkBox;
+    private RadioGroup radioGroup;
+    private SharedPrepData sharedPrepData;
+    private MainActivity mainActivity;
 }

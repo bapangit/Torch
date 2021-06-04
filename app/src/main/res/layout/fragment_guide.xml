@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="2.Torch"
+                android:text="2. Switch Torch"
                 android:textColor="#388E3C"
                 android:textSize="22dp" />
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:fontFamily="@font/roboto_light"
-                android:text="Double tap to Torch on Front or Back side."
+                android:text="Double tap to switch Torch Front / Back side."
                 android:textSize="18sp" />
 
             <TextView
@@ -87,24 +87,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="4. Prefer torch type"
+                android:text="4. On Start"
                 android:textColor="#388E3C"
                 android:textSize="22dp" />
                 
                 <RadioGroup
+                android:id="@+id/radio_group_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                          <RadioButton
+                         android:id="@+id/radio_id_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
-                        android:text="Front side" />
+                        android:text="Front Torch" />
                         <RadioButton
+                        android:id="@+id/radio_id_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
-                            android:text="Back side"/>
+                            android:text="Back Torch"/>
                 </RadioGroup>
                 
                 <TextView
