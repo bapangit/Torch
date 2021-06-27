@@ -9,13 +9,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +74,7 @@ public class GuideFragment extends Fragment {
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void initializeListeners() {
         listener = new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -84,28 +82,44 @@ public class GuideFragment extends Fragment {
             public void onClick(View v) {
                 if((v==closeBtn)){
                     getActivity().getSupportFragmentManager().popBackStack();
-                        sharedPrepData.setGuideStatus(!checkBox.isChecked());
                     if(checkBox.isChecked()){
                         sharedPrepData.setGuideInt(0);
                     }
-                    mainActivity.switchOnTorch(sharedPrepData.getTorchType());
+                    mainActivity.switchOnTorch(sharedPrepData.getSideType(),false);
                 }
             }
         };
         mainFrame.setOnClickListener(null);
         closeBtn.setOnClickListener(listener);
-        radioGroup.check(sharedPrepData.getTorchType()?R.id.radio_id_2:R.id.radio_id_1);
+        radioGroup.check(sharedPrepData.getSideType()?R.id.radio_id_2:R.id.radio_id_1);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if ((checkedId == R.id.radio_id_1)) {
-                    sharedPrepData.setTorchType(false);
-                    mainActivity.switchOnTorch(false);
+                    sharedPrepData.setSideType(false);
+                    mainActivity.switchOnTorch(false,false);
                 } else {
-                    sharedPrepData.setTorchType(true);
+                    sharedPrepData.setSideType(true);
                     mainActivity.setBackTorchMode(true);
                 }
+            }
+        });
+        radioGroup2.check(sharedPrepData.getNotificationType()?R.id.radioButtonB:R.id.radioButtonA);
+        radioGroup2.setOnCheckedChangeListener((group, checkedId) -> {
+            if ((checkedId == R.id.radioButtonA)) {
+                sharedPrepData.setNotificationType(false);
+            } else {
+                sharedPrepData.setNotificationType(true);
+                mainActivity.runNotification(true);
+            }
+        });
+        radioGroup3.check(sharedPrepData.getSwitchSound()?R.id.radioButtonb:R.id.radioButtona);
+        radioGroup3.setOnCheckedChangeListener((group, checkedId) -> {
+            if ((checkedId == R.id.radioButtona)) {
+                sharedPrepData.setSwitchSound(false);
+            } else {
+                sharedPrepData.setSwitchSound(true);
             }
         });
     }
@@ -114,15 +128,18 @@ public class GuideFragment extends Fragment {
         closeBtn = view.findViewById(R.id.close_btn_id);
         mainFrame = view.findViewById(R.id.main_frame_id);
         checkBox = view.findViewById(R.id.checkBox);
+        checkBox.setChecked(true);
         radioGroup = view.findViewById(R.id.radio_group_id);
+        radioGroup2 = view.findViewById(R.id.radio_group_id2);
+        radioGroup3 = view.findViewById(R.id.radio_group_id3);
     }
 
     private View view;
     private View.OnClickListener listener;
     private FrameLayout mainFrame;
-    private Button closeBtn;
+    private TextView closeBtn;
     private CheckBox checkBox;
-    private RadioGroup radioGroup;
+    private RadioGroup radioGroup,radioGroup2,radioGroup3;
     private SharedPrepData sharedPrepData;
     private MainActivity mainActivity;
 }

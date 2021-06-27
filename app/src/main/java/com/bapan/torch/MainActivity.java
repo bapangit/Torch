@@ -1,36 +1,42 @@
 package com.bapan.torch;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,10 +53,12 @@ private SharedPrepData sharedPrepData;
 private GuideFragment guideFragment;
 private FragmentTransaction fragmentTransaction;
 private AdView adView;
-private ImageView imageView;
+private ImageView imageView,imageViewSettings;
 private boolean torchMode,sideMode;
 private Timer timer;
-private boolean torchType = false;
+private boolean sideType = false;
+DatabaseReference ref;
+boolean isappclosed = false;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -60,25 +68,38 @@ private boolean torchType = false;
         //initialize Views
         display = findViewById(R.id.display_id);
         imageView = findViewById(R.id.imageView);
+        imageViewSettings = findViewById(R.id.imageViewSettings);
         //initialize App
+        ref = FirebaseDatabase.getInstance().getReference();
         sharedPrepData = new SharedPrepData(MainActivity.this);
         mCameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+        guideFragment = new GuideFragment();
         try {
             mCameraId = mCameraManager.getCameraIdList()[0];
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
+        
         lp = getWindow().getAttributes();
         lp.screenBrightness = brightness;
         
-        if(sharedPrepData.getGuideInt() > 1){
-            Toast.makeText(this, "Double tap on screen to swap torch.", Toast.LENGTH_LONG).show();
+        if(sharedPrepData.getGuideInt() == 3){
+            Toast.makeText(this, "Double tap on screen to change side.", Toast.LENGTH_LONG).show();
         }
+        if(sharedPrepData.getGuideInt() == 4){
+            Toast.makeText(MainActivity.this, "Press and hold the button to exit.", Toast.LENGTH_LONG).show();
+        }
+
+        
         getWindow().setAttributes(lp);
-        hideNavigationButton();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         final MediaPlayer btnClickEffect = MediaPlayer.create(this,R.raw.click_effect);
         btnClickEffect.setVolume(0.4f,0.4f);
+
+        //starting torch
+        sideType = sharedPrepData.getSideType();
+        switchOnTorch(sideType,false);
+        
         //admob
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -114,16 +135,22 @@ private boolean torchType = false;
                 Toast.makeText(MainActivity.this, "closed", Toast.LENGTH_SHORT).show();
             }
         });*/
-        
-        AdRequest adRequest = new AdRequest.Builder().build();
-        //Toast.makeText(this, ""+sharedPrepData.getAdWaitTimes(), Toast.LENGTH_SHORT).show();
-        if(sharedPrepData.getAdWaitTimes() == 0){
-            sharedPrepData.setAdWaitTimes(4);
-            adView.loadAd(adRequest); 
-        }
-        else {
-                sharedPrepData.setAdWaitTimes(sharedPrepData.getAdWaitTimes() - 1);
-        }
+
+        ref.child("ads/banner1").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getValue((Boolean.class))){
+
+                    AdRequest adRequest = new AdRequest.Builder().build();
+                    adView.loadAd(adRequest);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         
         
         /////
@@ -138,11 +165,14 @@ private boolean torchType = false;
                         imageView.animate().scaleX(0.80f).setDuration(320);
                         imageView.animate().scaleY(0.80f).setDuration(320);
                         timer = new Timer();
+                        
                         timer.schedule(new TimerTask() {
                             @Override
                             public void run() {
+                                sharedPrepData.setGuideInt(0);
                                 finish();
                                 setBackTorchMode(false);
+                                isappclosed = true;
                             }
                         }, 1000);
                         break;
@@ -150,27 +180,34 @@ private boolean torchType = false;
                         timer.cancel();
                         imageView.animate().scaleX(1f).setDuration(100);
                         imageView.animate().scaleY(1f).setDuration(100);
-                        if(sideMode){
-                            torchMode = !torchMode;
-                            if(torchMode){
-                                imageView.setImageDrawable(getResources().getDrawable(R.drawable.on_button));
-                                setBackTorchMode(true);
+                        if(!isappclosed){
+                            if(sideMode){
+                                torchMode = !torchMode;
+                                if(torchMode){
+                                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.on_button));
+                                    setBackTorchMode(true);
+                                }
+                                else {
+                                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.off_button));
+                                    setBackTorchMode(false);
+                                }
                             }
-                            else {
-                                imageView.setImageDrawable(getResources().getDrawable(R.drawable.off_button));
-                                setBackTorchMode(false);
+                            if(sharedPrepData.getSwitchSound()){
+                                btnClickEffect.start();
                             }
                         }
-                        btnClickEffect.start();
                         break;
                 }
                 return true;
             }
         });
+        imageViewSettings.setOnClickListener(v -> {
+            showGuide();
+        });
         gestureDetector.setListeners(new MyGestureDetector.MyGestureListeners() {
             @Override
             public void onVerticalSwipe(float change) {
-                if(!torchType){
+                if(!sideType){
                     if(change < 0f)
                     if(brightness < 0.97f)
                         brightness += 0.02f;
@@ -190,11 +227,8 @@ private boolean torchType = false;
 
             @Override
             public void onDoubleTapped() {
-                torchType = !torchType;
-                switchOnTorch(torchType);
-                if(torchType && sharedPrepData.getGuideInt() > 1){
-                    Toast.makeText(MainActivity.this, "Press and hold to exit.", Toast.LENGTH_LONG).show();
-                }
+                sideType = !sideType;
+                switchOnTorch(sideType,false);
             }
 
             @Override
@@ -205,21 +239,30 @@ private boolean torchType = false;
             }
         });
         //start
-        torchType = sharedPrepData.getTorchType();
-        switchOnTorch(torchType);
-        if(sharedPrepData.getGuideStatus() || sharedPrepData.getGuideInt() > 2){
-            guideFragment = new GuideFragment();
+        if(sharedPrepData.getGuideInt() > 4){
             showGuide();
         }
         //Test codes here
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onPause() {
+        super.onPause();
+        runNotification(sharedPrepData.getNotificationType());
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        hideNavigationButton();
-        setBackTorchMode(torchMode);
+        isappclosed = false;
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            hideNavigationButton();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -239,17 +282,19 @@ private boolean torchType = false;
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     // switch on torch //
-    public void switchOnTorch(boolean type){
-    torchMode = type;
-    sideMode = type;
-    if(type){
+    public void switchOnTorch(boolean sideType,boolean torchType){
+    sideMode = sideType;
+    torchMode = torchType;
+    if(sideType){
         imageView.setVisibility(View.VISIBLE);
+        imageViewSettings.setVisibility(View.VISIBLE);
     }else {
         imageView.setVisibility(View.INVISIBLE);
+        imageViewSettings.setVisibility(View.INVISIBLE);
     }
-    setBackTorchMode(type);
-            if(type){
-                display.setBackgroundColor(Color.BLACK);
+    setBackTorchMode(torchMode);
+            if(sideType){
+                display.setBackgroundColor(Color.DKGRAY);
                 setScreenBrightness(0.02f);
             }
             else {
@@ -275,8 +320,52 @@ private boolean torchType = false;
             mCameraManager.setTorchMode(mCameraId, mode);
                 if(mode)
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.on_button));
+                else
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.off_button));
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
     }
+    @SuppressLint("RemoteViewLayout")
+    public void runNotification(boolean type) {
+
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(getApplicationContext(), "channel_id");
+        contentView = new RemoteViews(getPackageName(), R.layout.my_notification_layout);
+
+        Intent switchIntent = new Intent(this, NotificationBroadcast.class);
+        switchIntent.putExtra("key_name","true");
+        Intent switchOffIntent = new Intent(this, NotificationBroadcast.class);
+        switchOffIntent.putExtra("key_name2","false");
+
+        contentView.setOnClickPendingIntent(R.id.flashButton, PendingIntent.getBroadcast(this, 1020, switchIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+        contentView.setOnClickPendingIntent(R.id.flashButton2, PendingIntent.getBroadcast(this, 1021, switchOffIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+        mBuilder.setSmallIcon(R.drawable.torchon);
+        mBuilder.setAutoCancel(true);
+        mBuilder.setOngoing(type);
+        mBuilder.setPriority(Notification.PRIORITY_MAX);
+        mBuilder.setOnlyAlertOnce(true);
+        mBuilder.build().flags = Notification.VISIBILITY_PUBLIC| Notification.PRIORITY_MAX;
+        mBuilder.setContent(contentView);
+        mBuilder.setDefaults(0);
+        mBuilder.setSound(null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "channel_id";
+            NotificationChannel channel = new NotificationChannel(channelId, "channelname", NotificationManager.IMPORTANCE_LOW);
+            channel.enableVibration(false);
+            notificationManager.createNotificationChannel(channel);
+            mBuilder.setChannelId(channelId);
+        }
+
+        notification = mBuilder.build();
+        notificationManager.notify(NotificationID, notification);
+    }
+    //notification related
+    private static RemoteViews contentView;
+    private static Notification notification;
+    private static NotificationManager notificationManager;
+    private static final int NotificationID = 1005;
+    private static NotificationCompat.Builder mBuilder;
 }

@@ -11,151 +11,256 @@
     <!-- TODO: Update blank fragment layout -->
 
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/rounded_bg">
+        android:layout_margin="14dp"
+        android:background="@drawable/rounded_bg"
+        android:orientation="vertical"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingRight="1dp">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/roboto_regular"
+            android:gravity="center"
+            android:text="@string/user_guide"
+            android:textSize="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="How To :"
+            android:textColor="#595959"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#ED404040"
+            android:elevation="-12dp"
+            android:paddingLeft="7dp"
+            app:layout_constraintBottom_toTopOf="@+id/textView3"
+            app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="0dp"
-                android:fontFamily="@font/josefin_italic"
-                android:gravity="center"
-                android:text="@string/user_guide"
-                android:textSize="32dp" />
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="1. Brightness Control"
-                android:textColor="#388E3C"
-                android:textSize="22dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:fontFamily="@font/roboto_light"
-                android:text="Swipe up/down to increase/decrease Brightness."
-                android:textSize="18dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="2. Switch Torch"
-                android:textColor="#388E3C"
-                android:textSize="22dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:fontFamily="@font/roboto_light"
-                android:text="Double tap to switch Torch Front / Back side."
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="3. Exit App"
-                android:textColor="#388E3C"
-                android:textSize="22dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:fontFamily="@font/roboto_light"
-                android:text="Pinch in to Exit the app"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="4. On Start"
-                android:textColor="#388E3C"
-                android:textSize="22dp" />
-                
-                <RadioGroup
-                android:id="@+id/radio_group_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                         <RadioButton
-                         android:id="@+id/radio_id_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="20dp"
-                        android:text="Front Torch" />
-                        <RadioButton
-                        android:id="@+id/radio_id_2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="20dp"
-                            android:text="Back Torch"/>
-                </RadioGroup>
-                
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:text="tip : Use above gestures properly to avoid 'User Guide' on startup."/>
+                    android:layout_marginTop="24dp"
+                    android:text="1. Brightness Control"
+                    android:textColor="#4B77A6"
+                    android:textSize="20dp" />
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_marginTop="28dp"
-                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="Swipe up/down to increase/decrease Brightness."
+                    android:textSize="16dp" />
 
-                <CheckBox
-                    android:id="@+id/checkBox"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="2. Switch Torch"
+                    android:textColor="#4B77A6"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="Double tap to switch Torch Front / Back side."
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="3. Exit App"
+                    android:textColor="#4B77A6"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:fontFamily="@font/roboto_light"
+                    android:text="Pinch in the screen or Long press on the torch button"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="4. On Start"
+                    android:textColor="#4B77A6"
+                    android:textSize="20dp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|bottom"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginBottom="32px"
-                    android:fontFamily="@font/regular"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:text="Don't show again."
-                    android:textSize="18dp" />
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/close_btn_id"
+                    <RadioButton
+                        android:id="@+id/radio_id_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:buttonTint="#4B77A6"
+                        android:text="Front Torch" />
+
+                    <RadioButton
+                        android:id="@+id/radio_id_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:buttonTint="#4B77A6"
+                        android:text="Back Torch" />
+                </RadioGroup>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="5. Control on Notification Bar"
+                    android:textColor="#4B77A6"
+                    android:textSize="20dp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_id2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end|bottom"
-                    android:layout_margin="8dp"
-                    android:layout_marginBottom="32dp"
-                    android:background="#A3D5D5D5"
-                    android:gravity="center"
-                    android:paddingLeft="32dp"
-                    android:paddingRight="32dp"
-                    android:text="Got It" />
-            </FrameLayout>
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioButtonA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:buttonTint="#4B77A6"
+                        android:text="Auto" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:buttonTint="#4B77A6"
+                        android:text="Always" />
+                </RadioGroup>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="6. Switching Sound"
+                    android:textColor="#4B77A6"
+                    android:textSize="20dp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_id3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioButtona"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:buttonTint="#4B77A6"
+                        android:text="Disable" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:buttonTint="#4B77A6"
+                        android:text="Enable" />
+                </RadioGroup>
+
+            </LinearLayout>
+        </ScrollView>
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="18dp"
+            android:text="Tips : Use Front Torch in case need of low light &amp; Use above gestures for Handy use."
+            android:textSize="16dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|left"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:buttonTint="#4B77A6"
+                android:fontFamily="@font/regular"
+                android:gravity="center"
+                android:text="Don't show on start."
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/close_btn_id"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:layout_margin="8dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="4"
+                android:gravity="center"
+                android:text="Got It"
+                android:textColor="#5B8ABC"
+                android:textSize="24dp" />
         </LinearLayout>
 
-        
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>

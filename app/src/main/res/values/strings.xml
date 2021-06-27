@@ -1,12 +1,12 @@
 <resources>
 
-    <string name="app_name">Torch</string>
+    <string name="app_name">Flashlight</string>
     <string name="user_guide"><u>User Guide</u></string>
     
     <string name="admob_test_app_id">ca-app-pub-3940256099942544~3347511713</string>
         <string name="admob_test_banner_id">ca-app-pub-3940256099942544/6300978111</string>
         
-    <string name="admob_app_id">ca-app-pub-9135896078308184~4128093252</string>
-        <string name="admob_banner_id">ca-app-pub-9135896078308184/2431868207</string>
+    <string name="admob_app_id">ca-app-pub-3325002004740352~7282149837</string>
+        <string name="admob_banner_id">ca-app-pub-3325002004740352/6712138344</string>
         
 </resources>

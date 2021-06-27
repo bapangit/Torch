@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "341809573720",
+    "firebase_url": "https://flashlight-76b01-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "flashlight-76b01",
+    "storage_bucket": "flashlight-76b01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341809573720:android:6109e42c74242e92fabf2d",
+        "android_client_info": {
+          "package_name": "com.bapan.torch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "341809573720-gqq80fd0l9og2s7fcst38m52sagecen4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnGrk8477YL1s_tqjdcSuzkIC4LPI6CJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341809573720-gqq80fd0l9og2s7fcst38m52sagecen4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,7 +2,6 @@ package com.bapan.torch;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 public class SharedPrepData {
     private SharedPreferences sp;
@@ -14,20 +13,12 @@ public class SharedPrepData {
         sp = context.getSharedPreferences("myData",context.MODE_PRIVATE);
         editor = sp.edit();
     }
-    public void setTorchType(boolean type){
+    public void setSideType(boolean type){
         editor.putBoolean("torchTypeKey",type);
         editor.apply();
     }
-    public boolean getTorchType(){
+    public boolean getSideType(){
         return sp.getBoolean("torchTypeKey",true);
-    }
-    
-    public void setGuideStatus(Boolean status){
-        editor.putBoolean("guideKey",status);
-        editor.apply();
-    }
-    public boolean getGuideStatus(){
-    return sp.getBoolean("guideKey",true);
     }
     
     public void setGuideInt(int times){
@@ -35,14 +26,22 @@ public class SharedPrepData {
         editor.apply();
     }
     public int getGuideInt(){
-    return sp.getInt("guideIntKey",0);
+    return sp.getInt("guideIntKey",5);
     }
 
-    public void setAdWaitTimes(int times){
-        editor.putInt("adWaitKey",times);
+    
+    public void setNotificationType(boolean type){
+        editor.putBoolean("NotificationTypeKey",type);
         editor.apply();
     }
-    public int getAdWaitTimes(){
-        return sp.getInt("adWaitKey",32);
+    public boolean getNotificationType(){
+        return sp.getBoolean("NotificationTypeKey",false);
+    }
+    public void setSwitchSound(boolean type){
+        editor.putBoolean("switchSound",type);
+        editor.apply();
+    }
+    public boolean getSwitchSound(){
+        return sp.getBoolean("switchSound",true);
     }
 }
